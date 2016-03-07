@@ -33,7 +33,7 @@ def get_all_links(content):
             break
     return links
 
-def process(seed_page):
+def crawl_web(seed_page):
     tocrawl=[seed_page]
     crawled=[]
     while len(tocrawl)>0:
@@ -43,9 +43,10 @@ def process(seed_page):
             tocrawl.extend(get_all_links(get_page(url)))
     return crawled
 
-seed_page="https://www.udacity.com/cs101x/index.html"
+seed_page="http://xkcd.com/"
+# seed_page="https://www.udacity.com/cs101x/index.html"
 # print get_all_links(get_page(seed_page))
-print process(seed_page)
+print crawl_web(seed_page)
 
 
 
