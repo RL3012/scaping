@@ -33,14 +33,22 @@ def get_all_links(content):
             break
     return links
 
+def union(p,q):
+    #update list p without duplication
+    for e in q:
+        if e not in p:
+            p.append(e)
+    return q
+
 def crawl_web(seed_page):
     tocrawl=[seed_page]
     crawled=[]
-    while len(tocrawl)>0:
+    while tocrawl:
         url=tocrawl.pop()
         if url not in crawled:
             crawled.append(url)
-            tocrawl.extend(get_all_links(get_page(url)))
+            union(tocrawl,get_all_links(get_page(url)))
+            # tocrawl.extend(get_all_links(get_page(url)))
     return crawled
 
 seed_page="http://xkcd.com/"
