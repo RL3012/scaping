@@ -1,6 +1,6 @@
 import urllib
 
-def get_page(seed_page):
+def get_page(url):
     # input as url and output as a string which is
     # the text of that page
     content=urllib.urlopen(seed_page).read()
@@ -20,23 +20,62 @@ def find_next_url(content):
 
 
 
-def get_all_links_tocrawl(content):
+def get_all_links(content):
     #input as string content and output as
     #all the links in a list
-    tocrawl=[]
+    links=[]
     while True:
         url,end_quote=find_next_url(content)
         if url:
-            tocrawl.append(url)
+            links.append(url)
             content=content[end_quote:]
         else:
             break
-    return tocrawl
+    return links
+
+def union(p,q):
+    #update list p without duplication
+    for e in q:
+        if e not in p:
+            p.append(e)
+    return q
+
+def crawl_web(seed_page):
+    tocrawl=[seed_page]
+    crawled=[]
+    while tocrawl:
+        url=tocrawl.pop()
+        if url not in crawled:
+            crawled.append(url)
+            union(tocrawl,get_all_links(get_page(url)))
+            # tocrawl.extend(get_all_links(get_page(url)))
+    return crawled
 
 seed_page="http://xkcd.com/"
+# seed_page="https://www.udacity.com/cs101x/index.html"
+# print get_all_links(get_page(seed_page))
+print crawl_web(seed_page)
 
-print get_all_links_tocrawl(get_page(seed_page))
-# print get_all_links_tocrawl(get_page("http://www.xuexiguangchang.com/"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
