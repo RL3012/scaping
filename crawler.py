@@ -44,12 +44,36 @@ def crawl_web(seed_page):
         url=tocrawl.pop()
         if url not in crawled:
             crawled.append(url)
-            union(tocrawl,get_all_links(get_page(url)))
+            content=get_page(url)
+            union(tocrawl,get_all_links(content))
     return crawled
 
-# seed_page="http://xkcd.com/"
-seed_page="https://www.udacity.com/cs101x/index.html"
-print crawl_web(seed_page)
+# seed_page="https://www.udacity.com/cs101x/index.html"
+# print crawl_web(seed_page)
+
+def add_to_index(index,keyword,url):
+    for entry in index:
+        if entry[0]==keyword:
+            entry[1].append(url)
+            return index
+    return index.append([keyword,[url]])
+
+def lookup(index,keyword):
+    for entry in index:
+        if entry[0]==keyword:
+            return entry[1]
+    return []
+
+def add_page_to_index(index,url,content):
+    words=content.split()
+    for word in words:
+        add_to_index(index, word, url)
+
+myindex=[]
+add_to_index(myindex, "data", "www.data.com")
+print lookup(myindex, "data")
+
+
 
 
 
