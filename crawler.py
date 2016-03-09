@@ -3,8 +3,11 @@
 import urllib
 
 def get_page(url):
-    content=urllib.urlopen(url).read()
-    return content
+    try:
+        content=urllib.urlopen(url).read()
+        return content
+    except:
+        return ""
 
 
 def find_next_url(content):
@@ -40,38 +43,41 @@ def union(p,q):
 def crawl_web(seed_page):
     tocrawl=[seed_page]
     crawled=[]
+    index={}
     while tocrawl:
         url=tocrawl.pop()
         if url not in crawled:
             crawled.append(url)
             content=get_page(url)
+            add_page_to_index(index, url, content)
             union(tocrawl,get_all_links(content))
-    return crawled
+    return index
 
-# seed_page="https://www.udacity.com/cs101x/index.html"
-# print crawl_web(seed_page)
 
 def add_to_index(index,keyword,url):
-    for entry in index:
-        if entry[0]==keyword:
-            entry[1].append(url)
-            return index
-    return index.append([keyword,[url]])
+    if keyword in index:
+        index[keyword].append(url)
+    else:
+        index[keyword]=[url]
 
 def lookup(index,keyword):
-    for entry in index:
-        if entry[0]==keyword:
-            return entry[1]
-    return []
+    if keyword in index:
+        return index[keyword]
+    return None
 
 def add_page_to_index(index,url,content):
     words=content.split()
     for word in words:
         add_to_index(index, word, url)
 
-myindex=[]
-add_to_index(myindex, "data", "www.data.com")
-print lookup(myindex, "data")
+# myindex=[]
+# add_to_index(myindex, "data", "www.data.com")
+# print lookup(myindex, "data")
+
+seed_page="https://www.udacity.com/cs101x/index.html"
+print crawl_web(seed_page)
+
+
 
 
 
