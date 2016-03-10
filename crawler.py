@@ -44,14 +44,17 @@ def crawl_web(seed_page):
     tocrawl=[seed_page]
     crawled=[]
     index={}
+    graph={}
     while tocrawl:
         url=tocrawl.pop()
         if url not in crawled:
             crawled.append(url)
             content=get_page(url)
             add_page_to_index(index, url, content)
-            union(tocrawl,get_all_links(content))
-    return index
+            outlinks=get_all_links(content)
+            graph[url]=[outlinks]
+            union(tocrawl,outlinks)
+    return index,graph
 
 
 def add_to_index(index,keyword,url):
@@ -75,7 +78,8 @@ def add_page_to_index(index,url,content):
 # print lookup(myindex, "data")
 
 seed_page="https://www.udacity.com/cs101x/index.html"
-print crawl_web(seed_page)
+myindex,mygraph=crawl_web(seed_page)
+print mygraph
 
 
 
